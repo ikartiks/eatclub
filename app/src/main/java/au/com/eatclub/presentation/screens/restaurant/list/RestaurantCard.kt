@@ -1,7 +1,6 @@
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -47,9 +46,11 @@ fun RestaurantCard(
   discountTiming: String,
   modifier: Modifier = Modifier
 ) {
-  Card (modifier = modifier,
-    colors = CardDefaults.cardColors(containerColor = Color.Transparent)){
-    Box{
+  Card(
+    modifier = modifier,
+    colors = CardDefaults.cardColors(containerColor = Color.Transparent)
+  ) {
+    Box {
       AsyncImage(
         model = ImageRequest.Builder(LocalContext.current)
           .data(image)
@@ -64,41 +65,44 @@ fun RestaurantCard(
           .height(260.dp)
           .clip(RoundedCornerShape(5)),
       )
-      Column (modifier = Modifier
-        .padding(
-          start = 20.dp,
-          top = 20.dp
-        )
-        .background(
-          color = MaterialTheme.colorScheme.tertiary,
-          shape = RoundedCornerShape(5.dp)
-        )
-        .padding(horizontal = 10.dp)){
+      Column(
+        modifier = Modifier
+          .padding(
+            start = 20.dp,
+            top = 20.dp
+          )
+          .background(
+            color = MaterialTheme.colorScheme.tertiary,
+            shape = RoundedCornerShape(5.dp)
+          )
+          .padding(horizontal = 10.dp)
+      ) {
         Text(
-          stringResource(R.string.discount,discountPercent),
+          stringResource(R.string.discount, discountPercent),
           style = MaterialTheme.typography.bodyMedium,
-          color = MaterialTheme.colorScheme.onTertiary)
+          color = MaterialTheme.colorScheme.onTertiary
+        )
         Text(
           discountTiming,
           style = MaterialTheme.typography.bodyMedium,
-          color = MaterialTheme.colorScheme.onTertiary)
+          color = MaterialTheme.colorScheme.onTertiary
+        )
       }
     }
-
-    Text(text = name,
-      style = MaterialTheme.typography.titleMedium)
-    Row {
-      Text(text = stringResource(R.string.distance, distance) ,
-        style = MaterialTheme.typography.bodyMedium,
-        color = MaterialTheme.colorScheme.onPrimary)
-      Text(text = address,
-        style = MaterialTheme.typography.bodyMedium,
-        color = MaterialTheme.colorScheme.onPrimary)
-    }
-
-    Text(text = cuisine,
+    Text(
+      text = name,
+      style = MaterialTheme.typography.titleMedium
+    )
+    Text(
+      text = address,
+      style = MaterialTheme.typography.bodyMedium,
+      color = MaterialTheme.colorScheme.onPrimary
+    )
+    Text(
+      text = cuisine,
       style = MaterialTheme.typography.bodySmall,
-      color = MaterialTheme.colorScheme.onPrimary)
+      color = MaterialTheme.colorScheme.onPrimary
+    )
     OptionsBuilder(options)
     Spacer(modifier = Modifier.height(20.dp))
   }
@@ -108,10 +112,12 @@ fun RestaurantCard(
 fun OptionsBuilder(options: ImmutableList<String>) {
   LazyRow(verticalAlignment = Alignment.CenterVertically) {
     itemsIndexed(options) { index, option ->
-      Text(text = option,
+      Text(
+        text = option,
         style = MaterialTheme.typography.labelMedium,
-        color = MaterialTheme.colorScheme.onPrimary)
-      if(index!=options.size-1){
+        color = MaterialTheme.colorScheme.onPrimary
+      )
+      if (index != options.size - 1) {
         Icon(
           imageVector = Icons.Default.CheckCircle,
           tint = MaterialTheme.colorScheme.onPrimary,

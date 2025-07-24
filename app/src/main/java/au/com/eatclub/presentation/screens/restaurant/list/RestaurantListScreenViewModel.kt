@@ -3,6 +3,7 @@ package au.com.eatclub.presentation.screens.restaurant.list
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import au.com.eatclub.data.model.Deals
 import au.com.eatclub.data.repo.RestaurantListRepository
 import au.com.eatclub.presentation.screens.model.Restaurant
 import java.util.Locale
@@ -24,16 +25,15 @@ class RestaurantListScreenViewModel(
     MutableStateFlow<RestaurantListScreenState>(RestaurantListScreenState.Loading)
   val state: StateFlow<RestaurantListScreenState> = _state
 
-
-  fun updateFilter(search: String) = viewModelScope.launch{
-    if(search.isNullOrBlank()){
+  fun updateFilter(search: String) = viewModelScope.launch {
+    if (search.isNullOrBlank()) {
       _state.update { data ->
         val successSate = (data as? RestaurantListScreenState.Success)
         successSate?.let {
           return@update it.copy(isFilterActive = false, it.restaurants, persistentListOf())
-        }?: data
+        } ?: data
       }
-    }else{
+    } else {
       _state.update { data ->
         val successSate = (data as? RestaurantListScreenState.Success)
         successSate?.let {
@@ -41,15 +41,16 @@ class RestaurantListScreenViewModel(
             isFilterActive = true,
             restaurants = it.restaurants,
             filteredRestaurants = it.restaurants.filter {
-              it.cuisine.lowercase(Locale.getDefault()).contains(search.lowercase(Locale.getDefault())) ||
-                  it.name.lowercase(Locale.getDefault()).contains(search.lowercase(Locale.getDefault()))
+              it.cuisine.lowercase(Locale.getDefault())
+                .contains(search.lowercase(Locale.getDefault())) ||
+                  it.name.lowercase(Locale.getDefault())
+                    .contains(search.lowercase(Locale.getDefault()))
             }.toImmutableList()
           )
         }
         data
       }
     }
-
   }
 
   fun getRestaurants() = viewModelScope.launch {
@@ -70,8 +71,8 @@ private fun au.com.eatclub.data.model.Restaurant.toRestaurant() =
     name = name,
     distance = "TBA",
     cuisine = cuisines.joinToString(", "),
-    address = "$address $suburb",
-    options = cuisines.toImmutableList(),
+    address = "$address, $suburb",
+    options = getOptions(deals.maxBy { it.discount }),
     image = imageLink,
     discountPercent = deals.maxBy { it.discount }.discount,
     discountTiming = getDiscountTiming(
@@ -79,6 +80,15 @@ private fun au.com.eatclub.data.model.Restaurant.toRestaurant() =
       deals.maxBy { it.discount }.close ?: deals.maxBy { it.discount }.end
     )
   )
+
+private fun getOptions(deal: Deals): ImmutableList<String> {
+  val options = mutableListOf<String>()
+  if (deal.dineIn == "true")
+    options.add("Dine in")
+  if (deal.lightning == "true")
+    options.add("Take away")
+  return options.toImmutableList()
+}
 
 private fun getDiscountTiming(open: String?, close: String?): String {
   return if (open != null && close != null) {
