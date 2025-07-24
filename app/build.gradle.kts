@@ -50,6 +50,7 @@ dependencies {
   implementation(libs.androidx.material3)
   implementation(libs.kotlinx.collections.immutable)
   implementation(libs.bundles.coilBundle)
+  implementation(libs.bundles.koinBundle)
   testImplementation(libs.junit)
   androidTestImplementation(libs.androidx.junit)
   androidTestImplementation(libs.androidx.espresso.core)

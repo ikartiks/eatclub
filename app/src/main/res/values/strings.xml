@@ -5,4 +5,10 @@
     <string name="discount_terms_before">Arrive before %s</string>
     <string name="discount_terms_after">Arrive after %s</string>
     <string name="discount_terms_anytime">Anytime today</string>
+    <string name="account">account</string>
+    <string name="search">Search</string>
+    <string name="more_options">More options</string>
+    <string name="search_desserts">Search restaurants</string>
+    <string name="something_went_wrong">Something went wrong</string>
+    <string name="no_data_found">No data found</string>
 </resources>
