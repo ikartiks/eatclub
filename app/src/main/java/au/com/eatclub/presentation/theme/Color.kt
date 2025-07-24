@@ -1,4 +1,4 @@
-package au.com.eatclub.ui.theme
+package au.com.eatclub.presentation.theme
 
 import androidx.compose.ui.graphics.Color
 

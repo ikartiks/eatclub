@@ -1,4 +1,4 @@
-package au.com.eatclub.ui.screens.restaurant.list
+package au.com.eatclub.presentation.screens.restaurant.list
 
 import RestaurantCard
 import androidx.annotation.DrawableRes
@@ -19,8 +19,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import au.com.eatclub.R
-import au.com.eatclub.ui.screens.model.Restaurant
-import au.com.eatclub.ui.theme.EatClubTheme
+import au.com.eatclub.presentation.screens.model.Restaurant
+import au.com.eatclub.presentation.theme.EatClubTheme
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import org.koin.androidx.compose.koinViewModel

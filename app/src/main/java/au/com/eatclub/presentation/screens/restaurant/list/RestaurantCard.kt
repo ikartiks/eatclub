@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
@@ -26,7 +28,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import au.com.eatclub.R
-import au.com.eatclub.ui.screens.restaurant.list.debugPlaceholder
+import au.com.eatclub.presentation.screens.restaurant.list.debugPlaceholder
 import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import coil3.request.crossfade
@@ -62,19 +64,22 @@ fun RestaurantCard(
           .height(260.dp)
           .clip(RoundedCornerShape(5)),
       )
-      Column (modifier = Modifier.padding(
-        start = 20.dp,
-        top = 20.dp
-      ).background(
-        color = MaterialTheme.colorScheme.tertiary,
-        shape = RoundedCornerShape(5.dp)
-      ).padding(horizontal = 10.dp)){
+      Column (modifier = Modifier
+        .padding(
+          start = 20.dp,
+          top = 20.dp
+        )
+        .background(
+          color = MaterialTheme.colorScheme.tertiary,
+          shape = RoundedCornerShape(5.dp)
+        )
+        .padding(horizontal = 10.dp)){
         Text(
           stringResource(R.string.discount,discountPercent),
           style = MaterialTheme.typography.bodyMedium,
           color = MaterialTheme.colorScheme.onTertiary)
         Text(
-          stringResource(R.string.discount_terms_anytime),//todo
+          discountTiming,
           style = MaterialTheme.typography.bodyMedium,
           color = MaterialTheme.colorScheme.onTertiary)
       }
@@ -101,8 +106,8 @@ fun RestaurantCard(
 
 @Composable
 fun OptionsBuilder(options: ImmutableList<String>) {
-  Row(verticalAlignment = Alignment.CenterVertically) {
-    options.forEachIndexed { index, option ->
+  LazyRow(verticalAlignment = Alignment.CenterVertically) {
+    itemsIndexed(options) { index, option ->
       Text(text = option,
         style = MaterialTheme.typography.labelMedium,
         color = MaterialTheme.colorScheme.onPrimary)

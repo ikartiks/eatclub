@@ -1,14 +1,16 @@
-import com.android.utils.jvmArchitecture
-
 plugins {
   alias(libs.plugins.android.application)
   alias(libs.plugins.kotlin.android)
   alias(libs.plugins.kotlin.compose)
+  alias(libs.plugins.kotlin.serialize)
 }
 
 android {
   namespace = "au.com.eatclub"
   compileSdk = 36
+  buildFeatures {
+    buildConfig = true
+  }
 
   defaultConfig {
     applicationId = "au.com.eatclub"
@@ -51,6 +53,7 @@ dependencies {
   implementation(libs.kotlinx.collections.immutable)
   implementation(libs.bundles.coilBundle)
   implementation(libs.bundles.koinBundle)
+  implementation(libs.bundles.retrofitBundle)
   testImplementation(libs.junit)
   androidTestImplementation(libs.androidx.junit)
   androidTestImplementation(libs.androidx.espresso.core)

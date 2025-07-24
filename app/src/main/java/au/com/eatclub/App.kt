@@ -1,7 +1,10 @@
 package au.com.eatclub
 
 import android.app.Application
-import au.com.eatclub.ui.screens.restaurant.list.RestaurantListScreenViewModel
+import au.com.eatclub.data.repo.RestaurantListRepository
+import au.com.eatclub.data.repo.RestaurantListRepositoryImpl
+import au.com.eatclub.data.service.getRetrofitInstance
+import au.com.eatclub.presentation.screens.restaurant.list.RestaurantListScreenViewModel
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.core.context.startKoin
@@ -23,5 +26,7 @@ class App : Application() {
 }
 
 val appModule = module {
-    viewModel { RestaurantListScreenViewModel(get()) }
+    viewModel { RestaurantListScreenViewModel(get(), get()) }
+    single { getRetrofitInstance() }
+    single { RestaurantListRepositoryImpl(get()) as RestaurantListRepository }
 }

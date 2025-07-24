@@ -1,4 +1,4 @@
-package au.com.eatclub.ui.screens.restaurant.list
+package au.com.eatclub.presentation.screens.restaurant.list
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

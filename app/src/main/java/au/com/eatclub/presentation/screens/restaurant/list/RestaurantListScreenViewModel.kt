@@ -1,15 +1,14 @@
-package au.com.eatclub.ui.screens.restaurant.list
+package au.com.eatclub.presentation.screens.restaurant.list
 
-import androidx.compose.ui.text.toLowerCase
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import au.com.eatclub.ui.screens.model.Restaurant
+import au.com.eatclub.data.repo.RestaurantListRepository
+import au.com.eatclub.presentation.screens.model.Restaurant
 import java.util.Locale
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
@@ -18,6 +17,7 @@ import org.koin.core.component.KoinComponent
 
 class RestaurantListScreenViewModel(
   val savedStateHandle: SavedStateHandle,
+  val resturantListRepository: RestaurantListRepository,
 ) : ViewModel(), KoinComponent {
 
   private val _state =
@@ -52,48 +52,40 @@ class RestaurantListScreenViewModel(
 
   }
 
-  suspend fun getRestaurants() = viewModelScope.launch {
-    _state.value = RestaurantListScreenState.Success(
-      false, persistentListOf(
-        Restaurant(
-          id = "asd",
-          name = "The Bar",
-          distance = "0.5km",
-          cuisine = "Italian",
-          address = "Spensor st",
-          options = persistentListOf("Dine in", "Take away"),
-          image = "https://dinnerdeal.backendless.com/api/e14e5098-2393-6d4a-ff80-f5564e042100/v1/files/restaurant_images/DEA567C5-F64C-3C03-FF00-E3B24909BE00_image_0_1520389372647.jpg",
-          discountPercent = "30",
-          discountTiming = "All day",
-        ),
-        Restaurant(
-          id = "asd",
-          name = "POP IN",
-          distance = "0.5km",
-          cuisine = "Indian",
-          address = "Spensor st",
-          options = persistentListOf("Dine in", "Take away"),
-          image = "https://dinnerdeal.backendless.com/api/e14e5098-2393-6d4a-ff80-f5564e042100/v1/files/restaurant_images/DEA567C5-F64C-3C03-FF00-E3B24909BE00_image_0_1520389372647.jpg",
-          discountPercent = "30",
-          discountTiming = "All day",
-        ),
-        Restaurant(
-          id = "asd",
-          name = "The Bar at abc",
-          distance = "0.5km",
-          cuisine = "Japanese",
-          address = "Spensor st",
-          options = persistentListOf("Dine in", "Take away"),
-          image = "https://dinnerdeal.backendless.com/api/e14e5098-2393-6d4a-ff80-f5564e042100/v1/files/restaurant_images/DEA567C5-F64C-3C03-FF00-E3B24909BE00_image_0_1520389372647.jpg",
-          discountPercent = "30",
-          discountTiming = "All day",
-        )
-      ),
-      persistentListOf()
-    )
+  fun getRestaurants() = viewModelScope.launch {
+    resturantListRepository.fetchAllRestaurants()?.let {
+      _state.value = RestaurantListScreenState.Success(
+        isFilterActive = false,
+        restaurants = it.restaurants.map { it.toRestaurant() }
+          .sortedByDescending { it.discountPercent }.toImmutableList(),
+        filteredRestaurants = persistentListOf()
+      )
+    }
   }
+}
 
+private fun au.com.eatclub.data.model.Restaurant.toRestaurant() =
+  Restaurant(
+    id = objectId,
+    name = name,
+    distance = "TBA",
+    cuisine = cuisines.joinToString(", "),
+    address = "$address $suburb",
+    options = cuisines.toImmutableList(),
+    image = imageLink,
+    discountPercent = deals.maxBy { it.discount }.discount,
+    discountTiming = getDiscountTiming(
+      deals.maxBy { it.discount }.open ?: deals.maxBy { it.discount }.start,
+      deals.maxBy { it.discount }.close ?: deals.maxBy { it.discount }.end
+    )
+  )
 
+private fun getDiscountTiming(open: String?, close: String?): String {
+  return if (open != null && close != null) {
+    "$open to $close"
+  } else if (open != null) {
+    "$open onwards"
+  } else "Anytime"
 }
 
 sealed interface RestaurantListScreenState {

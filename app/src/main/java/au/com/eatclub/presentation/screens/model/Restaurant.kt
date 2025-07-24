@@ -1,4 +1,4 @@
-package au.com.eatclub.ui.screens.model
+package au.com.eatclub.presentation.screens.model
 
 import kotlinx.collections.immutable.ImmutableList
 
