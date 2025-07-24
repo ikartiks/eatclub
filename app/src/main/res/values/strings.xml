@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Eat Club</string>
+    <string name="distance">%s Away,</string>
+    <string name="discount">%s%% off</string>
+    <string name="discount_terms_before">Arrive before %s</string>
+    <string name="discount_terms_after">Arrive after %s</string>
+    <string name="discount_terms_anytime">Anytime today</string>
 </resources>
