@@ -2,9 +2,9 @@ package au.com.eatclub.presentation.screens.restaurant.list
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import au.com.eatclub.data.model.Deals
 import au.com.eatclub.data.repo.RestaurantListRepository
 import au.com.eatclub.presentation.screens.model.Restaurant
+import au.com.eatclub.presentation.screens.model.toRestaurant
 import java.util.Locale
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
@@ -22,15 +22,6 @@ class RestaurantListScreenViewModel(
   private val _state =
     MutableStateFlow<RestaurantListScreenState>(RestaurantListScreenState.Loading)
   val state: StateFlow<RestaurantListScreenState> = _state
-
-  var selectedRestaurant: Restaurant? = null
-
-  fun selectRestaurant(id: String) {
-    val stateValue = state.value
-    if (stateValue is RestaurantListScreenState.Success) {
-      selectedRestaurant = stateValue.restaurants.first { it.id == id }
-    }
-  }
 
   fun updateFilter(search: String) = viewModelScope.launch {
     if (search.isBlank()) {
@@ -78,36 +69,15 @@ class RestaurantListScreenViewModel(
       )
     }
   }
-}
 
-private fun au.com.eatclub.data.model.Restaurant.toRestaurant() =
-  Restaurant(
-    id = objectId,
-    name = name,
-    distance = "TBA",
-    cuisine = cuisines.joinToString(", "),
-    address = "$address, $suburb",
-    options = getOptions(deals.maxBy { it.discount }),
-    image = imageLink,
-    openingTime = open,
-    closingTime = close,
-    deals = deals.map { it.toDeal() }.sortedByDescending { it.discountPercent }.toImmutableList()
-  )
+  var selectedRestaurant: Restaurant? = null
 
-private fun Deals.toDeal(): Restaurant.Deal = Restaurant.Deal(
-  discountPercent = discount,
-  startTime = start ?: open,
-  endTime = end ?: close,
-  quantityLeft = qtyLeft
-)
-
-private fun getOptions(deal: Deals): ImmutableList<String> {
-  val options = mutableListOf<String>()
-  if (deal.dineIn == "true")
-    options.add("Dine in")
-  if (deal.lightning == "true")
-    options.add("Take away")
-  return options.toImmutableList()
+  fun selectRestaurant(id: String) {
+    val stateValue = state.value
+    if (stateValue is RestaurantListScreenState.Success) {
+      selectedRestaurant = stateValue.restaurants.first { it.id == id }
+    }
+  }
 }
 
 sealed interface RestaurantListScreenState {
