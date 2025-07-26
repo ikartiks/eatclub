@@ -3,6 +3,7 @@ plugins {
   alias(libs.plugins.kotlin.android)
   alias(libs.plugins.kotlin.compose)
   alias(libs.plugins.kotlin.serialize)
+  alias(libs.plugins.roborazzi)
 }
 
 android {
@@ -38,6 +39,11 @@ android {
   buildFeatures {
     compose = true
   }
+  testOptions {
+    unitTests {
+      isIncludeAndroidResources = true
+    }
+  }
 }
 
 dependencies {
@@ -55,7 +61,9 @@ dependencies {
   implementation(libs.bundles.koinBundle)
   implementation(libs.bundles.retrofitBundle)
   implementation(libs.bundles.navBundle)
+  implementation(libs.androidx.ui.test.android)
   testImplementation(libs.junit)
+  testImplementation(libs.bundles.testBundle)
   androidTestImplementation(libs.androidx.junit)
   androidTestImplementation(libs.androidx.espresso.core)
   androidTestImplementation(platform(libs.androidx.compose.bom))

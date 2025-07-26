@@ -17,6 +17,9 @@ adapterRxjava3 = "3.0.0"
 loggingInterceptor = "5.1.0"
 kotlinxSerializationJson = "1.9.0"
 navigationCompose = "2.8.2"
+robolectric = "4.15.1"
+roborazzi = "1.25.0"
+uiTestAndroid = "1.8.3"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -53,6 +56,11 @@ koin-ktor = { module = "io.insert-koin:koin-ktor", version.ref = "koinAndroid" }
 navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
 navigation-ui-ktx = { module = "androidx.navigation:navigation-ui-ktx", version.ref = "navigationCompose" }
 
+robolectric = { group = "org.robolectric", name = "robolectric", version.ref = "robolectric" }
+roborazzi = { group = "io.github.takahirom.roborazzi", name = "roborazzi", version.ref = "roborazzi" }
+roborazzi-compose = { group = "io.github.takahirom.roborazzi", name = "roborazzi-compose", version.ref = "roborazzi" }
+androidx-ui-test-android = { group = "androidx.compose.ui", name = "ui-test-android", version.ref = "uiTestAndroid" }
+koinTest = { module = "io.insert-koin:koin-test-junit4", version.ref = "koinAndroid" }
 
 
 
@@ -61,6 +69,7 @@ android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlin-serialize = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+roborazzi = { id = "io.github.takahirom.roborazzi", version.ref = "roborazzi" }
 
 [bundles]
 coilBundle = [
@@ -86,3 +95,5 @@ retrofitBundle = [
 ]
 
 navBundle = ["navigation-compose", "navigation-ui-ktx"]
+
+testBundle = ["robolectric", "roborazzi", "roborazzi-compose", "koinTest"]

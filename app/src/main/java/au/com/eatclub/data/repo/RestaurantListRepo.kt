@@ -9,7 +9,7 @@ interface RestaurantListRepository {
   suspend fun fetchAllRestaurants(): Restaurants?
 }
 
-class RestaurantListRepositoryImpl(val retrofit: Retrofit) : RestaurantListRepository,
+class RestaurantListRepositoryImpl(private val retrofit: Retrofit) : RestaurantListRepository,
   KoinComponent {
   override suspend fun fetchAllRestaurants(): Restaurants? {
     val eatClubService = retrofit.create(EatClubService::class.java)
