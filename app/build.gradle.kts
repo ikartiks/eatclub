@@ -54,6 +54,7 @@ dependencies {
   implementation(libs.bundles.coilBundle)
   implementation(libs.bundles.koinBundle)
   implementation(libs.bundles.retrofitBundle)
+  implementation(libs.bundles.navBundle)
   testImplementation(libs.junit)
   androidTestImplementation(libs.androidx.junit)
   androidTestImplementation(libs.androidx.espresso.core)

@@ -11,4 +11,9 @@
     <string name="search_desserts">Search restaurants</string>
     <string name="something_went_wrong">Something went wrong</string>
     <string name="no_data_found">No data found</string>
+    <string name="to">%1$s to %2$s</string>
+    <string name="onwards">%1$s onwards</string>
+    <string name="anytime">Anytime</string>
+    <string name="redeem">Redeem</string>
+    <string name="deals_left">%1$s Deals left</string>
 </resources>

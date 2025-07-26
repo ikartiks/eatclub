@@ -23,11 +23,17 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import au.com.eatclub.R
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.debounce
 
+@OptIn(FlowPreview::class)
 @Composable
-fun TopBar(onSearch:(String) -> Unit,modifier: Modifier = Modifier){
+fun TopBar(
+  onSearch: (String) -> Unit,
+  modifier: Modifier = Modifier,
+  showSearch: Boolean = true,
+) {
   Column(modifier) {
     Row (horizontalArrangement = Arrangement.SpaceBetween,
       modifier = Modifier
@@ -49,19 +55,21 @@ fun TopBar(onSearch:(String) -> Unit,modifier: Modifier = Modifier){
         modifier = Modifier.size(48.dp)
       )
     }
-    var query by rememberSaveable { mutableStateOf("") }
-    LaunchedEffect(query) {
-      snapshotFlow { query }
-        .debounce(250L)
-        .collectLatest { search ->
-          onSearch(search)
-        }
-    }
+    if (showSearch) {
+      var query by rememberSaveable { mutableStateOf("") }
+      LaunchedEffect(query) {
+        snapshotFlow { query }
+          .debounce(250L)
+          .collectLatest { search ->
+            onSearch(search)
+          }
+      }
 
-    CustomizableSearchBar(
-      searchText = query,
-      onSearchTextChanged = { query = it },
-      modifier = Modifier.fillMaxWidth()
-    )
+      CustomizableSearchBar(
+        searchText = query,
+        onSearchTextChanged = { query = it },
+        modifier = Modifier.fillMaxWidth()
+      )
+    }
   }
 }

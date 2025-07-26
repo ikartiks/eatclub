@@ -1,6 +1,5 @@
 package au.com.eatclub.presentation.screens.restaurant.list
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import au.com.eatclub.data.model.Deals
@@ -17,20 +16,32 @@ import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 
 class RestaurantListScreenViewModel(
-  val savedStateHandle: SavedStateHandle,
-  val resturantListRepository: RestaurantListRepository,
+  private val restaurantListRepository: RestaurantListRepository,
 ) : ViewModel(), KoinComponent {
 
   private val _state =
     MutableStateFlow<RestaurantListScreenState>(RestaurantListScreenState.Loading)
   val state: StateFlow<RestaurantListScreenState> = _state
 
+  var selectedRestaurant: Restaurant? = null
+
+  fun selectRestaurant(id: String) {
+    val stateValue = state.value
+    if (stateValue is RestaurantListScreenState.Success) {
+      selectedRestaurant = stateValue.restaurants.first { it.id == id }
+    }
+  }
+
   fun updateFilter(search: String) = viewModelScope.launch {
-    if (search.isNullOrBlank()) {
+    if (search.isBlank()) {
       _state.update { data ->
         val successSate = (data as? RestaurantListScreenState.Success)
         successSate?.let {
-          return@update it.copy(isFilterActive = false, it.restaurants, persistentListOf())
+          return@update it.copy(
+            isFilterActive = false,
+            restaurants = it.restaurants,
+            filteredRestaurants = persistentListOf()
+          )
         } ?: data
       }
     } else {
@@ -54,11 +65,15 @@ class RestaurantListScreenViewModel(
   }
 
   fun getRestaurants() = viewModelScope.launch {
-    resturantListRepository.fetchAllRestaurants()?.let {
+    restaurantListRepository.fetchAllRestaurants()?.let {
       _state.value = RestaurantListScreenState.Success(
         isFilterActive = false,
         restaurants = it.restaurants.map { it.toRestaurant() }
-          .sortedByDescending { it.discountPercent }.toImmutableList(),
+          .sortedByDescending {
+            it.deals.maxBy { deal ->
+              deal.discountPercent
+            }.discountPercent
+          }.toImmutableList(),
         filteredRestaurants = persistentListOf()
       )
     }
@@ -74,12 +89,17 @@ private fun au.com.eatclub.data.model.Restaurant.toRestaurant() =
     address = "$address, $suburb",
     options = getOptions(deals.maxBy { it.discount }),
     image = imageLink,
-    discountPercent = deals.maxBy { it.discount }.discount,
-    discountTiming = getDiscountTiming(
-      deals.maxBy { it.discount }.open ?: deals.maxBy { it.discount }.start,
-      deals.maxBy { it.discount }.close ?: deals.maxBy { it.discount }.end
-    )
+    openingTime = open,
+    closingTime = close,
+    deals = deals.map { it.toDeal() }.sortedByDescending { it.discountPercent }.toImmutableList()
   )
+
+private fun Deals.toDeal(): Restaurant.Deal = Restaurant.Deal(
+  discountPercent = discount,
+  startTime = start ?: open,
+  endTime = end ?: close,
+  quantityLeft = qtyLeft
+)
 
 private fun getOptions(deal: Deals): ImmutableList<String> {
   val options = mutableListOf<String>()
@@ -88,14 +108,6 @@ private fun getOptions(deal: Deals): ImmutableList<String> {
   if (deal.lightning == "true")
     options.add("Take away")
   return options.toImmutableList()
-}
-
-private fun getDiscountTiming(open: String?, close: String?): String {
-  return if (open != null && close != null) {
-    "$open to $close"
-  } else if (open != null) {
-    "$open onwards"
-  } else "Anytime"
 }
 
 sealed interface RestaurantListScreenState {

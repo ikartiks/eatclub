@@ -1,4 +1,5 @@
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -27,7 +28,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import au.com.eatclub.R
-import au.com.eatclub.presentation.screens.restaurant.list.debugPlaceholder
 import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import coil3.request.crossfade
@@ -44,10 +44,11 @@ fun RestaurantCard(
   image: String,
   discountPercent: String,
   discountTiming: String,
-  modifier: Modifier = Modifier
+  modifier: Modifier = Modifier,
+  onClick: (String) -> Unit,
 ) {
   Card(
-    modifier = modifier,
+    modifier = modifier.clickable { onClick(id) },
     colors = CardDefaults.cardColors(containerColor = Color.Transparent)
   ) {
     Box {
@@ -57,7 +58,7 @@ fun RestaurantCard(
           .crossfade(true)
           .build(),
         error = painterResource(R.drawable.placeholder),
-        placeholder = debugPlaceholder(R.drawable.placeholder),
+        placeholder = painterResource(R.drawable.placeholder),
         contentDescription = stringResource(R.string.distance),
         contentScale = ContentScale.Crop,
         modifier = Modifier
@@ -109,8 +110,25 @@ fun RestaurantCard(
 }
 
 @Composable
-fun OptionsBuilder(options: ImmutableList<String>) {
-  LazyRow(verticalAlignment = Alignment.CenterVertically) {
+fun getDiscountTiming(open: String?, close: String?): String {
+  return if (open != null && close != null) {
+    stringResource(R.string.to, open, close)
+  } else if (open != null) {
+    stringResource(R.string.onwards, open)
+  } else {
+    stringResource(R.string.anytime)
+  }
+}
+
+@Composable
+fun OptionsBuilder(
+  options: ImmutableList<String>,
+  modifier: Modifier = Modifier
+) {
+  LazyRow(
+    verticalAlignment = Alignment.CenterVertically,
+    modifier = modifier
+  ) {
     itemsIndexed(options) { index, option ->
       Text(
         text = option,
