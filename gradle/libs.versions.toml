@@ -20,6 +20,13 @@ navigationCompose = "2.8.2"
 robolectric = "4.15.1"
 roborazzi = "1.25.0"
 uiTestAndroid = "1.8.3"
+mockk = "1.12.5"
+coreTesting = "2.2.0"
+junitJupiterApi = "5.8.2"
+junitKtx = "1.2.1"
+koinTestJunit4 = "3.0.2"
+kotlinxCoroutinesAndroid = "1.7.3"
+
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -61,7 +68,15 @@ roborazzi = { group = "io.github.takahirom.roborazzi", name = "roborazzi", versi
 roborazzi-compose = { group = "io.github.takahirom.roborazzi", name = "roborazzi-compose", version.ref = "roborazzi" }
 androidx-ui-test-android = { group = "androidx.compose.ui", name = "ui-test-android", version.ref = "uiTestAndroid" }
 koinTest = { module = "io.insert-koin:koin-test-junit4", version.ref = "koinAndroid" }
-
+mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
+mockk-agent-jvm = { module = "io.mockk:mockk-agent-jvm", version.ref = "mockk" }
+mockk-android = { module = "io.mockk:mockk-android", version.ref = "mockk" }
+core-testing = { module = "androidx.arch.core:core-testing", version.ref = "coreTesting" }
+androidx-junit-ktx = { module = "androidx.test.ext:junit-ktx", version.ref = "junitKtx" }
+androidx-rules = { module = "androidx.test:rules", version.ref = "coreKtx" }
+coroutines-testing = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinxCoroutinesAndroid" }
+junit-jupiter-api = { module = "org.junit.jupiter:junit-jupiter-api", version.ref = "junitJupiterApi" }
+koin-test-junit4 = { module = "io.insert-koin:koin-test-junit4", version.ref = "koinTestJunit4" }
 
 
 [plugins]
@@ -96,4 +111,9 @@ retrofitBundle = [
 
 navBundle = ["navigation-compose", "navigation-ui-ktx"]
 
-testBundle = ["robolectric", "roborazzi", "roborazzi-compose", "koinTest"]
+testBundle = ["robolectric",
+    "androidx-junit-ktx",
+    "coroutines-testing",
+    "junit-jupiter-api",
+    "koin-test-junit4",
+    "roborazzi", "roborazzi-compose", "koinTest", "mockk", "mockk-agent-jvm", "mockk-android", "core-testing"]
